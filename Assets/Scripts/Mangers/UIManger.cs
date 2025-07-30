@@ -5,11 +5,10 @@ using UnityEngine.UI;
 
 public class UIManger : MonoBehaviour, GameManger.GameLauncher, GameManger.GameEnded
 {
-
+    private Transition _transition;
     public GameObject playUI;
 
     public GameObject winUI;
-    
     public GameObject retrayUI;
     public Text level;
 
@@ -21,7 +20,6 @@ public class UIManger : MonoBehaviour, GameManger.GameLauncher, GameManger.GameE
         OnReady();
         GameManger.Instance.AddGameLauncherListner(this);
         GameManger.Instance.AddGameEndedListener(this);
-        
     }
 
     public void OnWin(GameResult game)
@@ -36,7 +34,7 @@ public class UIManger : MonoBehaviour, GameManger.GameLauncher, GameManger.GameE
         Debug.Log("OnLoss UIManger");
         winUI.SetActive(false);
         playUI.SetActive(false);
-        retrayUI.SetActive(true);
+        //retrayUI.SetActive(true);
     }
 
     public void OnReady()
@@ -51,7 +49,6 @@ public class UIManger : MonoBehaviour, GameManger.GameLauncher, GameManger.GameE
     public void OnStart()
     {
         playUI.SetActive(false);
-       
     }
 
     public void OnEnd()

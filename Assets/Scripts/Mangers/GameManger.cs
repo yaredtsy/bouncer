@@ -133,12 +133,13 @@ public class GameManger : Managers<GameManger>
     }
 
     #endregion
-    
+
+    public Animator animator;
+
     public int possibleDistance;
     public GameObject[] levels;
     public float totalDistanceDraw;
     public bool isDebuging;
-
     public int currentLevelNO = 0;
     GameObject currentlevel;
     LevelManger currentlevelmaneger;
@@ -174,18 +175,19 @@ public class GameManger : Managers<GameManger>
 
     void Win()
     {
-        
         GameResult gameResult = new GameResult(){ score= currentlevelmaneger.getScore(totalDistanceDraw),level=currentLevelNO };
         TriggerGameEnd();
         TriggerGameEndedOnWin(gameResult);
     }
     public void OnLoss()
     {
+        animator.SetTrigger("StartFade");
         TriggerGameEnd();
         TriggerGameEndedOnLoss();
-#if UNITY_EDITOR
-        win = false;
-#endif
+        Invoke("RestartCurrentLevel", .5f);
+        #if UNITY_EDITOR
+                 win = false;
+        #endif
     }
 
     public void OnPlayTap()
@@ -250,7 +252,14 @@ public class GameManger : Managers<GameManger>
 
         return LoadLevel(levels[currentLevelNO]);
     }
-
+    void RestartCurrentLevel()
+    {
+        // Reload the current level
+        LoadLevel(levels[currentLevelNO]);
+        
+        // Reset game state and trigger ready
+        TriggerGameOnReady();
+    }
     public void AddDistance(float distance)
     {
         totalDistanceDraw += distance;
