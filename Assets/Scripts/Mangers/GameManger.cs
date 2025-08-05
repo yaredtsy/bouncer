@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using System.Linq;
 using System.Timers;
 
@@ -162,6 +163,11 @@ public class GameManger : Managers<GameManger>
 #endif
     void Start()
     {
+        if (animator != null)
+        {
+            Image childImage = animator.GetComponentInChildren<Image>();
+            childImage.color = Color.white;
+        }
         if (!isDebuging)
             TriggerGameOnReady();
     }
@@ -182,11 +188,11 @@ public class GameManger : Managers<GameManger>
     public void OnLoss()
     {
         animator.SetTrigger("StartFade");
+        Invoke("RestartCurrentLevel", .5f);
         TriggerGameEnd();
         TriggerGameEndedOnLoss();
-        Invoke("RestartCurrentLevel", .5f);
         #if UNITY_EDITOR
-                 win = false;
+            win = false;
         #endif
     }
 
