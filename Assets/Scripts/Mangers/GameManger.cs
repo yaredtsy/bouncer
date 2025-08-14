@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using System.Linq;
 using System.Timers;
+using UnityEngine.SceneManagement;
 
 public class GameManger : Managers<GameManger>
 {
@@ -215,6 +216,11 @@ public class GameManger : Managers<GameManger>
         TriggerGameOnReady();
         totalDistanceDraw = 0;
         TriggerOnDrawin(totalDistanceDraw);
+    }
+
+    public void OnHomeTap()
+    {
+        SceneManager.LoadScene(0);
     }
     public void OnNextLevelTap()
     {

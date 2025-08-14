@@ -7903,6 +7903,7 @@ MonoBehaviour:
   Tree1: {fileID: 1467804412}
   Tree2: {fileID: 354918237}
   crossFade: {fileID: 1879874984}
+  fadeDuration: 0.3
 --- !u!1 &1879874984 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 7140381380519440993, guid: 11bab1219b7fe6946817aa036e8f85ca, type: 3}
