@@ -35,12 +35,24 @@ public class GameManger : Managers<GameManger>
         {
             gameLauncher.OnEnd();
         }
+        
+        // Trigger navigation slide out animation
+        if (navAnimator != null)
+        {
+            navAnimator.SetTrigger("SlideOut");
+        }
     }
     public void TriggerGameOnReady()
     {
         foreach (GameLauncher launch in gameLauncher)
         {
             launch.OnReady();
+        }
+        
+        // Trigger navigation slide in animation
+        if (navAnimator != null)
+        {
+            navAnimator.SetTrigger("SlideIn");
         }
     }
 
@@ -137,6 +149,7 @@ public class GameManger : Managers<GameManger>
     #endregion
 
     public Animator animator;
+    private Animator navAnimator; // Will be found at runtime by tag "Nav_UI"
 
     public int possibleDistance;
     public GameObject[] levels;
@@ -154,6 +167,24 @@ public class GameManger : Managers<GameManger>
             LoadLeveL(0);
     }
 
+    private void FindNavUIAnimator()
+    {
+        // Find Nav_UI GameObject by tag and get its animator
+        GameObject navUI = GameObject.FindWithTag("Nav_UI");
+        if (navUI != null)
+        {
+            navAnimator = navUI.GetComponent<Animator>();
+            if (navAnimator == null)
+            {
+                Debug.LogWarning($"Nav_UI GameObject found but no Animator component attached!");
+            }
+        }
+        else
+        {
+            Debug.LogWarning($"No GameObject found with tag 'Nav_UI'. Make sure your navigation UI has the correct tag.");
+        }
+    }
+
 #if UNITY_EDITOR
     public bool win;
     public GameObject winPrefab;
@@ -164,6 +195,9 @@ public class GameManger : Managers<GameManger>
 #endif
     void Start()
     {
+        // Find the Nav_UI animator at runtime
+        FindNavUIAnimator();
+        
         if (animator != null)
         {
             Image childImage = animator.GetComponentInChildren<Image>();

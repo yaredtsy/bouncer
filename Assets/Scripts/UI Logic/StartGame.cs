@@ -12,6 +12,9 @@ public class StartGame : MonoBehaviour
     [SerializeField] private float fadeDuration = 0.5f; // Configurable fade duration
     private Animator animator;
     private bool isTransitioning = false; // Prevent multiple transitions
+    
+    // Static variable to track if logo has been shown in current session
+    private static bool hasShownLogoThisSession = false;
 
     private void Awake()
     {
@@ -25,13 +28,23 @@ public class StartGame : MonoBehaviour
         selectLevel.SetActive(false);
         optionsMenu.SetActive(false);
 
-        if (videoPlayer == null)
+        // Check if we should show the logo video
+        if (!hasShownLogoThisSession && videoPlayer != null)
         {
-            Debug.LogError("VideoPlayer not assigned! Please assign it in the Inspector.");
-            return;
+            // First time in this session - show logo video
+            hasShownLogoThisSession = true;
+            videoPlayer.loopPointReached += OnVideoFinished;
+            videoPlayer.gameObject.SetActive(true);
         }
-        videoPlayer.loopPointReached += OnVideoFinished;
+        else
+        {
+            // Logo already shown or no video player - skip to main menu
+            if (videoPlayer != null)
+                videoPlayer.gameObject.SetActive(false);
+            menuCanvas.SetActive(true);
+        }
     }
+    
     private void OnVideoFinished(VideoPlayer vp)
     {
         videoPlayer.gameObject.SetActive(false);
@@ -125,5 +138,17 @@ public class StartGame : MonoBehaviour
     public void onQuitClicked()
     {
         Application.Quit();
+    }
+    
+    // Public method to reset logo state (useful for testing or game restart)
+    public void ResetLogoState()
+    {
+        hasShownLogoThisSession = false;
+    }
+    
+    // Call this when starting a new game session
+    public void OnNewGameSession()
+    {
+        hasShownLogoThisSession = false;
     }
 }
