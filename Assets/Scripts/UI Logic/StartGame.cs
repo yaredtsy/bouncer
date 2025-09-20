@@ -8,16 +8,28 @@ public class StartGame : MonoBehaviour
     public VideoPlayer videoPlayer;
     public GameObject menuCanvas, mainMenu, optionsMenu, selectLevel, Logo, Tree1, Tree2;
     public GameObject crossFade;
+    
+    [Header("Mute Button Sprites")]
+    public UnityEngine.UI.Button musicButton;
+    public Sprite musicMutedSprite;    // UI_Button_27
+    public Sprite musicUnmutedSprite;  // UI_Button_9
+    
+    public UnityEngine.UI.Button sfxButton;
+    public Sprite sfxMutedSprite;      // UI_Button_25
+    public Sprite sfxUnmutedSprite;    // UI_Button_6
     [Header("Transition Settings")]
     [SerializeField] private float fadeDuration = 0.5f; // Configurable fade duration
     private Animator animator;
     private bool isTransitioning = false; // Prevent multiple transitions
     
     // Static variable to track if logo has been shown in current session
-    private static bool hasShownLogoThisSession = false;
+    public static bool hasShownLogoThisSession = false;
+
+    //public static StartGame Instance;
 
     private void Awake()
     {
+       // Instance = this;
         if(menuCanvas != null)
         menuCanvas.SetActive(false);
     }
@@ -28,11 +40,15 @@ public class StartGame : MonoBehaviour
         selectLevel.SetActive(false);
         optionsMenu.SetActive(false);
 
+        UpdateMuteButtonSprites();
         // Check if we should show the logo video
         if (!hasShownLogoThisSession && videoPlayer != null)
         {
             // First time in this session - show logo video
             hasShownLogoThisSession = true;
+            
+            // Setup video event to play audio when video starts
+            videoPlayer.started += OnVideoStarted;
             videoPlayer.loopPointReached += OnVideoFinished;
             videoPlayer.gameObject.SetActive(true);
         }
@@ -45,15 +61,37 @@ public class StartGame : MonoBehaviour
         }
     }
     
+    private void OnVideoStarted(VideoPlayer vp)
+    {
+        // Play splash audio when video actually starts
+        if(AudioManager.Instance != null)
+        {
+            AudioManager.Instance.PlaySplashVideo();
+        }
+    }
+    
     private void OnVideoFinished(VideoPlayer vp)
     {
         videoPlayer.gameObject.SetActive(false);
         menuCanvas.SetActive(true);
+        
+        // Start main menu music
+        if(AudioManager.Instance != null)
+        {
+            AudioManager.Instance.PlayMainMenuMusic();
+        }
     }
 
     public void onPlayClicked()
     {
         if (isTransitioning) return; // Prevent multiple clicks during transition
+        
+        // Play button click sound
+        if(AudioManager.Instance != null)
+        {
+            AudioManager.Instance.PlayButtonClick();
+        }
+        
         StartCoroutine(TransitionToLevelSelect());
     }
 
@@ -80,6 +118,13 @@ public class StartGame : MonoBehaviour
     public void OnBackClicked()
     {
         if (isTransitioning) return;
+        
+        // Play button click sound
+        if(AudioManager.Instance != null)
+        {
+            AudioManager.Instance.PlayButtonClick();
+        }
+        
         StartCoroutine(TransitionToMainMenu());
     }
 
@@ -106,12 +151,38 @@ public class StartGame : MonoBehaviour
 
     public void onLevelClicked()
     {
+        // Play button click sound
+        if(AudioManager.Instance != null)
+        {
+            AudioManager.Instance.PlayButtonClick();
+        }
+        
+        // Start music transition
+        StartCoroutine(TransitionToGameMusic());
+    }
+    
+    private IEnumerator TransitionToGameMusic()
+    {
+        // Fade out menu music
+        if(AudioManager.Instance != null)
+        {
+            yield return StartCoroutine(AudioManager.Instance.FadeMusic(0f, 1f)); // Fade out over 1 second
+        }
+        
+        // Load the game scene
         SceneManager.LoadScene(1);
     }
 
     public void onOptionsClicked()
     {
         if (isTransitioning) return;
+        
+        // Play button click sound
+        if(AudioManager.Instance != null)
+        {
+            AudioManager.Instance.PlayButtonClick();
+        }
+        
         StartCoroutine(TransitionToOptions());
     }
 
@@ -137,7 +208,135 @@ public class StartGame : MonoBehaviour
 
     public void onQuitClicked()
     {
+        // Play button click sound
+        if(AudioManager.Instance != null)
+        {
+            AudioManager.Instance.PlayButtonClick();
+        }
+        
         Application.Quit();
+    }
+    
+    // Music toggle method
+    public void onMusicToggleClicked()
+    {
+        // Play button click sound
+        if(AudioManager.Instance != null)
+        {
+            AudioManager.Instance.PlayButtonClick();
+        }
+        
+        // Toggle music mute state
+        if(AudioManager.Instance != null && musicButton != null)
+        {
+            AudioManager.Instance.ToggleMusicMute();
+            
+            // Update button sprite based on mute state
+            if(AudioManager.Instance.isMusicMuted)
+            {
+                musicButton.image.sprite = musicMutedSprite;
+            }
+            else
+            {
+                musicButton.image.sprite = musicUnmutedSprite;
+            }
+        }
+    }
+    
+    // SFX toggle method
+    public void onSFXToggleClicked()
+    {
+        // Play button click sound
+        if(AudioManager.Instance != null)
+        {
+            AudioManager.Instance.PlayButtonClick();
+        }
+        
+        // Toggle SFX mute state
+        if(AudioManager.Instance != null && sfxButton != null)
+        {
+            AudioManager.Instance.ToggleSFXMute();
+            
+            // Update button sprite based on mute state
+            if(AudioManager.Instance.isSFXMuted)
+            {
+                sfxButton.image.sprite = sfxMutedSprite;
+            }
+            else
+            {
+                sfxButton.image.sprite = sfxUnmutedSprite;
+            }
+        }
+    }
+    
+    // Progress button method
+    public void onProgressClicked()
+    {
+        // Play button click sound
+        if(AudioManager.Instance != null)
+        {
+            AudioManager.Instance.PlayButtonClick();
+        }
+        
+        // TODO: Add progress functionality here
+    }
+    
+    // About button method
+    public void onAboutClicked()
+    {
+        // Play button click sound
+        if(AudioManager.Instance != null)
+        {
+            AudioManager.Instance.PlayButtonClick();
+        }
+        
+        // TODO: Add about functionality here
+    }
+    
+    // Language button method
+    public void onLanguageClicked()
+    {
+        // Play button click sound
+        if(AudioManager.Instance != null)
+        {
+            AudioManager.Instance.PlayButtonClick();
+        }
+        
+        // TODO: Add language switching functionality here
+        // Example: Open language selection menu
+    }
+    
+    // Update button sprites based on current mute states
+    private void UpdateMuteButtonSprites()
+    {
+        if(AudioManager.Instance != null)
+        {
+            // Update music button sprite
+            if(musicButton != null)
+            {
+                if(AudioManager.Instance.isMusicMuted)
+                {
+                    musicButton.image.sprite = musicMutedSprite;
+                }
+                else
+                {
+                    musicButton.image.sprite = musicUnmutedSprite;
+                }
+            }
+            
+            // Update SFX button sprite
+            if(sfxButton != null)
+            {
+                if(AudioManager.Instance.isSFXMuted)
+                {
+                    sfxButton.image.sprite = sfxMutedSprite;
+                }
+                else
+                {
+                    sfxButton.image.sprite = sfxUnmutedSprite;
+                }
+            }
+        }
     }
     
     // Public method to reset logo state (useful for testing or game restart)

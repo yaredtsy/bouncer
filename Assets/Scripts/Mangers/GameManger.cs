@@ -216,6 +216,12 @@ public class GameManger : Managers<GameManger>
 
     void Win()
     {
+        // Play level complete SFX
+        if(AudioManager.Instance != null)
+        {
+            AudioManager.Instance.PlayLevelComplete();
+        }
+        
         GameResult gameResult = new GameResult(){ score= currentlevelmaneger.getScore(totalDistanceDraw),level=currentLevelNO };
         TriggerGameEnd();
         TriggerGameEndedOnWin(gameResult);
@@ -233,6 +239,12 @@ public class GameManger : Managers<GameManger>
 
     public void OnPlayTap()
     {
+        // Play button click sound
+        if(AudioManager.Instance != null)
+        {
+            AudioManager.Instance.PlayButtonClick();
+        }
+        
         if (totalDistanceDraw < 0)
         {
             Debug.Log("Please Draw");
@@ -247,6 +259,12 @@ public class GameManger : Managers<GameManger>
     }
     public void OnRetrayTap()
     {
+        // Play button click sound
+        if(AudioManager.Instance != null)
+        {
+            AudioManager.Instance.PlayButtonClick();
+        }
+        
         TriggerGameOnReady();
         totalDistanceDraw = 0;
         TriggerOnDrawin(totalDistanceDraw);
@@ -254,10 +272,35 @@ public class GameManger : Managers<GameManger>
 
     public void OnHomeTap()
     {
+        // Play button click sound
+        if(AudioManager.Instance != null)
+        {
+            AudioManager.Instance.PlayButtonClick();
+        }
+        
+        // Start music transition
+        StartCoroutine(TransitionToMenuMusic());
+    }
+    
+    private IEnumerator TransitionToMenuMusic()
+    {
+        // Fade out game music
+        if(AudioManager.Instance != null)
+        {
+            yield return StartCoroutine(AudioManager.Instance.FadeMusic(0f, 1f)); // Fade out over 1 second
+        }
+        
+        // Load the menu scene
         SceneManager.LoadScene(0);
     }
     public void OnNextLevelTap()
     {
+        // Play button click sound
+        if(AudioManager.Instance != null)
+        {
+            AudioManager.Instance.PlayButtonClick();
+        }
+        
         LoadNextLevel();
         TriggerGameOnReady();
     }

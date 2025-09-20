@@ -8,6 +8,7 @@ TagManager:
   - DrawManger
   - GameManger
   - ball
+  - Nav_UI
   layers:
   - Default
   - TransparentFX
