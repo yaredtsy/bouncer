@@ -210,6 +210,7 @@ GameObject:
   - component: {fileID: 52962857}
   - component: {fileID: 52962859}
   - component: {fileID: 52962858}
+  - component: {fileID: 52962860}
   m_Layer: 5
   m_Name: Logo
   m_TagString: Untagged
@@ -275,6 +276,26 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 52962856}
   m_CullTransparentMesh: 1
+--- !u!95 &52962860
+Animator:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 52962856}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 3da818a481a79714eaabad898a724ed8, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &69996910
 GameObject:
   m_ObjectHideFlags: 0
@@ -1894,8 +1915,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
-  m_AnchoredPosition: {x: 239.43497, y: 947.897}
-  m_SizeDelta: {x: 1463.299, y: 1706.655}
+  m_AnchoredPosition: {x: 239.43497, y: 1036}
+  m_SizeDelta: {x: 1463.299, y: 2025.313}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &354918239
 MonoBehaviour:
@@ -6238,6 +6259,7 @@ GameObject:
   - component: {fileID: 1467804413}
   - component: {fileID: 1467804415}
   - component: {fileID: 1467804414}
+  - component: {fileID: 1467804416}
   m_Layer: 5
   m_Name: Tree
   m_TagString: Untagged
@@ -6303,6 +6325,26 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1467804412}
   m_CullTransparentMesh: 1
+--- !u!95 &1467804416
+Animator:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1467804412}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 6d85a98ac1781ff4ebbcea4d0348c353, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &1473074215
 GameObject:
   m_ObjectHideFlags: 0
@@ -7908,9 +7950,16 @@ MonoBehaviour:
   buttonClickSFX: {fileID: 8300000, guid: 709497301bdb22d4d8369eb6dbf3cd26, type: 3}
   splashVideoSFX: {fileID: 8300000, guid: 0e4fe4b7000f09e489c70f611331d7bf, type: 3}
   levelCompleteSFX: {fileID: 8300000, guid: 0ca5e55ef6f1f2749bc8c840c6191795, type: 3}
-  gameOverSFX: {fileID: 0}
+  gameOverSFX: {fileID: 8300000, guid: 816e656dd2494344c89018230a7f9910, type: 3}
+  stretchSFX: {fileID: 8300000, guid: 5fd1baec29b99004ba853f03c613e014, type: 3}
+  bounce1SFX: {fileID: 8300000, guid: 8fa69ac9cefd9dd4c948ceae2c40c6f3, type: 3}
+  bounce2SFX: {fileID: 8300000, guid: 38d6d005c6a211946ac0b27a1cb9e055, type: 3}
+  bounce3SFX: {fileID: 8300000, guid: 587c7d838f87e6f49bb8d7ea3de515bb, type: 3}
+  nestHitSFX: {fileID: 8300000, guid: bd93ed3b9163d434ebf00491e47b3f21, type: 3}
   musicVolume: 0.7
   sfxVolume: 1
+  isMusicMuted: 0
+  isSFXMuted: 0
 --- !u!1 &1876657035
 GameObject:
   m_ObjectHideFlags: 0

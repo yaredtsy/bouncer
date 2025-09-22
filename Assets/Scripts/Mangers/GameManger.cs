@@ -40,17 +40,22 @@ public class GameManger : Managers<GameManger>
         if (navAnimator != null)
         {
             navAnimator.SetTrigger("SlideOut");
+            navAnimator.ResetTrigger("SlideIn");
         }
     }
     public void TriggerGameOnReady()
     {
+        // Reset win/loss flags when starting a new game
+        isWinInProgress = false;
+        isLossInProgress = false;
+        
         foreach (GameLauncher launch in gameLauncher)
         {
             launch.OnReady();
         }
         
-        // Trigger navigation slide in animation
-        if (navAnimator != null)
+        
+        if (navAnimator != null && !isWinInProgress)
         {
             navAnimator.SetTrigger("SlideIn");
         }
@@ -158,6 +163,10 @@ public class GameManger : Managers<GameManger>
     public int currentLevelNO = 0;
     GameObject currentlevel;
     LevelManger currentlevelmaneger;
+    
+    // Guard flags to prevent multiple win/loss calls
+    private bool isWinInProgress = false;
+    private bool isLossInProgress = false;
 
     public LevelManger Currentlevelmaneger => currentlevelmaneger;
 
@@ -208,6 +217,13 @@ public class GameManger : Managers<GameManger>
     }
     public void OnWIn()
     {
+        // Prevent multiple win calls
+        if (isWinInProgress || isLossInProgress)
+        {
+            return;
+        }
+        
+        isWinInProgress = true;
         Invoke("Win", 1f);
 #if UNITY_EDITOR
         win = true;
@@ -228,6 +244,13 @@ public class GameManger : Managers<GameManger>
     }
     public void OnLoss()
     {
+        // Prevent multiple loss calls
+        if (isLossInProgress || isWinInProgress)
+        {
+            return;
+        }
+        
+        isLossInProgress = true;
         animator.SetTrigger("StartFade");
         Invoke("RestartCurrentLevel", .5f);
         TriggerGameEnd();
@@ -343,6 +366,10 @@ public class GameManger : Managers<GameManger>
     }
     void RestartCurrentLevel()
     {
+        // Reset win/loss flags when restarting
+        isWinInProgress = false;
+        isLossInProgress = false;
+        
         // Reload the current level
         LoadLevel(levels[currentLevelNO]);
         

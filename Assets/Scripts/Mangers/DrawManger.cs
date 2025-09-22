@@ -67,6 +67,9 @@ public class DrawManger : MonoBehaviour, GameManger.GameLauncher
 
         linerenderer.SetWidth(lineData.start, lineData.end);
         linerenderer.material.color = lineData.color;
+        
+        // Start stretch SFX when drawing begins
+        AudioManager.Instance.StartStretchSFX();
     }
 
     private void OnMouseDrag()
@@ -114,6 +117,9 @@ public class DrawManger : MonoBehaviour, GameManger.GameLauncher
     
     public void StartMouseUp()
     {
+        // Stop stretch SFX when drawing ends
+        AudioManager.Instance.StopStretchSFX();
+        
         float lineLength = Vector3.Distance(startPos, endPos); // length of line
 
         SetUpLine(lineLength,startPos,endPos);
@@ -124,6 +130,8 @@ public class DrawManger : MonoBehaviour, GameManger.GameLauncher
         if (lineLength < 0.4 || IsPointerOverUIObject())
         {
             Debug.Log("Line Destroyed");
+            // Stop stretch SFX if line is destroyed
+            AudioManager.Instance.StopStretchSFX();
             Destroy(linerenderer.gameObject);
             
             return;

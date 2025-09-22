@@ -10,7 +10,15 @@ public class Goal : MonoBehaviour
         IGoal igoal = other.gameObject.GetComponent<IGoal>();
 
         if(igoal!=null)
+        {
+            // Play nest hit SFX when ball hits the goal
+            if (AudioManager.Instance != null)
+            {
+                AudioManager.Instance.PlayNestHitSFX();
+            }
+            
             igoal.OnScore();
+        }
     }
 
     IEnumerator OnScore(IGoal goal){

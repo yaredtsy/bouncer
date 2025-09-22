@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+
 public class Managers<T> : MonoBehaviour where T: MonoBehaviour
 {
     private static T instance;
@@ -10,12 +11,16 @@ public class Managers<T> : MonoBehaviour where T: MonoBehaviour
     public static T Instance{
         get{
             if(instance == null)
+            {
                 instance = FindObjectOfType<T>();
-            else if(instance !=FindObjectOfType<T>())
+                if(instance != null)
+                    DontDestroyOnLoad(instance);
+            }
+            else if(instance != FindObjectOfType<T>())
+            {
                 Destroy(FindObjectOfType<T>());
-            DontDestroyOnLoad(FindObjectOfType<T>());
+            }
             return instance;
         }
     }
-    
 }

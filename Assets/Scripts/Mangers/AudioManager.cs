@@ -19,6 +19,11 @@ public class AudioManager : MonoBehaviour
     public AudioClip splashVideoSFX;
     public AudioClip levelCompleteSFX;
     public AudioClip gameOverSFX;
+    public AudioClip stretchSFX;
+    public AudioClip bounce1SFX;
+    public AudioClip bounce2SFX;
+    public AudioClip bounce3SFX;
+    public AudioClip nestHitSFX;
     
     [Header("Volume Settings")]
     [Range(0f, 1f)]
@@ -184,6 +189,63 @@ public class AudioManager : MonoBehaviour
     public void PlayGameOver()
     {
         PlaySFX(gameOverSFX);
+    }
+    
+    // Continuous SFX methods for line drawing
+    public void StartStretchSFX()
+    {
+        if (stretchSFX != null && !isSFXMuted)
+        {
+            sfxSource.clip = stretchSFX;
+            sfxSource.loop = true;
+            sfxSource.Play();
+        }
+    }
+    
+    public void StopStretchSFX()
+    {
+        if (sfxSource.clip == stretchSFX)
+        {
+            sfxSource.Stop();
+            sfxSource.loop = false;
+        }
+    }
+    
+    // Bounce SFX methods
+    private bool useBounce1 = true; // Toggle between bounce1 and bounce2
+    
+    public void PlayBounceSFX()
+    {
+        if (isSFXMuted) return;
+        
+        AudioClip bounceClip = useBounce1 ? bounce1SFX : bounce2SFX;
+        if (bounceClip != null)
+        {
+            sfxSource.PlayOneShot(bounceClip);
+        }
+        
+        // Toggle for next bounce
+        useBounce1 = !useBounce1;
+    }
+    
+    public void PlayBounce3SFX()
+    {
+        if (isSFXMuted) return;
+        
+        if (bounce3SFX != null)
+        {
+            sfxSource.PlayOneShot(bounce3SFX);
+        }
+    }
+    
+    public void PlayNestHitSFX()
+    {
+        if (isSFXMuted) return;
+        
+        if (nestHitSFX != null)
+        {
+            sfxSource.PlayOneShot(nestHitSFX);
+        }
     }
     
     // Volume Control Methods
