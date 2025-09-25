@@ -10,7 +10,7 @@ public class UIManger : MonoBehaviour, GameManger.GameLauncher, GameManger.GameE
 
     public GameObject winUI;
     public GameObject retrayUI;
-    public Text level;
+    public Text level,level2;
 
 
     // public static UIManger Getinstance => instance;
@@ -31,7 +31,7 @@ public class UIManger : MonoBehaviour, GameManger.GameLauncher, GameManger.GameE
 
     public void OnLoss()
     {
-        Debug.Log("OnLoss UIManger");
+        //Debug.Log("OnLoss UIManger");
         winUI.SetActive(false);
         playUI.SetActive(false);
         //retrayUI.SetActive(true);
@@ -39,8 +39,9 @@ public class UIManger : MonoBehaviour, GameManger.GameLauncher, GameManger.GameE
 
     public void OnReady()
     {
-        Debug.Log("OnReady UIManger");
+        //Debug.Log("OnReady UIManger");
         level.text = "Level " + GameManger.Instance.Currentlevelmaneger.currentlevel;
+        level2.text = "Level " + GameManger.Instance.Currentlevelmaneger.currentlevel;
         winUI.SetActive(false);
         playUI.SetActive(true);
         retrayUI.SetActive(false);
