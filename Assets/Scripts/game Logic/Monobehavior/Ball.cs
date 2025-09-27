@@ -9,7 +9,9 @@ public class Ball : MonoBehaviour, GameManger.GameLauncher,IDestroyer
     TrailRenderer trailRenderer;
     
     [Header("Bounce SFX Settings")]
-    public float minBounceSpeed = 1f; // Minimum speed required to play bounce SFX
+    public float minBounceSpeed = 1.2f; // Minimum speed required to play bounce SFX
+    public float minSpeedDuration = 2f; // Seconds before restart if too slow
+    private float slowTimer = 0f;
 
     void Awake()
     {
@@ -58,7 +60,10 @@ public class Ball : MonoBehaviour, GameManger.GameLauncher,IDestroyer
         GameManger.Instance.OnLoss();
     }
     private void OnDisable() {
-        GameManger.Instance.RemoveGameLauncherListner(this);
+        if (GameManger.Instance != null)
+        {
+            GameManger.Instance.RemoveGameLauncherListner(this);
+        }
     }
     void ResetLevel(){
         this.gameObject.transform.position= ballPosition;
@@ -72,6 +77,7 @@ public class Ball : MonoBehaviour, GameManger.GameLauncher,IDestroyer
         // Only play bounce SFX if the ball is moving fast enough
         if (currentSpeed >= minBounceSpeed)
         {
+            Debug.Log("Bounce SFX: "+ currentSpeed);
             // Check if the collision is with a line (has LineRenderer component)
             if (collision.gameObject.GetComponent<LineRenderer>() != null)
             {
@@ -82,6 +88,26 @@ public class Ball : MonoBehaviour, GameManger.GameLauncher,IDestroyer
             {
                 // This is collision with something else - play bounce3
                 AudioManager.Instance.PlayBounce3SFX();
+            }
+        }
+    }
+
+    void Update()
+    {
+        if (!rb.isKinematic)
+        {
+            if (rb.velocity.magnitude < minBounceSpeed)
+            {
+                slowTimer += Time.deltaTime;
+                if (slowTimer >= minSpeedDuration)
+                {
+                    OnClean(); // Restart level
+                    slowTimer = 0f;
+                }
+            }
+            else
+            {
+                slowTimer = 0f; // Reset timer if ball speeds up
             }
         }
     }

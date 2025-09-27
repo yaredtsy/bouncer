@@ -23,7 +23,7 @@ public class ScorePopulatorDisplay : MonoBehaviour, GameManger.GameLauncher
         
         inittransform = scoreTexts[0].gameObject.transform;
         initialpostion = inittransform.localPosition;
-        Debug.Log("Start");
+        //Debug.Log("Start");
     }
     public void OnEnd()
     {
@@ -32,7 +32,7 @@ public class ScorePopulatorDisplay : MonoBehaviour, GameManger.GameLauncher
 
     public void OnReady()
     {
-        Debug.Log("Onready");
+        //Debug.Log("Onready");
         bool changed = false;
         foreach (LevelLineData.ScoreData scoreData in GameManger.Instance.Currentlevelmaneger.levelLineData.scoresData)
         {

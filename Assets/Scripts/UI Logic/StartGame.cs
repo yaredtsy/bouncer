@@ -35,6 +35,11 @@ public class StartGame : MonoBehaviour
     }
     void Start()
     {
+        if (progressResetPanel != null)
+            progressResetPanel.SetActive(false);
+        if (AboutPanel != null)
+            AboutPanel.SetActive(false);
+
         if (crossFade != null)
             animator = crossFade.GetComponentInChildren<Animator>();
         selectLevel.SetActive(false);
@@ -118,11 +123,15 @@ public class StartGame : MonoBehaviour
     public void OnBackClicked()
     {
         if (isTransitioning) return;
-        
+
         // Play button click sound
-        if(AudioManager.Instance != null)
+        if (AudioManager.Instance != null)
         {
             AudioManager.Instance.PlayButtonClick();
+        if (progressResetPanel != null)
+            progressResetPanel.SetActive(false);
+        if (AboutPanel != null)
+            AboutPanel.SetActive(false);
         }
         
         StartCoroutine(TransitionToMainMenu());
@@ -147,30 +156,6 @@ public class StartGame : MonoBehaviour
         mainMenu.SetActive(true);
         
         isTransitioning = false;
-    }
-
-    public void onLevelClicked()
-    {
-        // Play button click sound
-        if(AudioManager.Instance != null)
-        {
-            AudioManager.Instance.PlayButtonClick();
-        }
-        
-        // Start music transition
-        StartCoroutine(TransitionToGameMusic());
-    }
-    
-    private IEnumerator TransitionToGameMusic()
-    {
-        // Fade out menu music
-        if(AudioManager.Instance != null)
-        {
-            yield return StartCoroutine(AudioManager.Instance.FadeMusic(0f, 1f)); // Fade out over 1 second
-        }
-        
-        // Load the game scene
-        SceneManager.LoadScene(1);
     }
 
     public void onOptionsClicked()
@@ -220,8 +205,12 @@ public class StartGame : MonoBehaviour
     // Music toggle method
     public void onMusicToggleClicked()
     {
+        if (progressResetPanel != null)
+            progressResetPanel.SetActive(false);
+        if (AboutPanel != null)
+            AboutPanel.SetActive(false);
         // Play button click sound
-        if(AudioManager.Instance != null)
+        if (AudioManager.Instance != null)
         {
             AudioManager.Instance.PlayButtonClick();
         }
@@ -246,8 +235,12 @@ public class StartGame : MonoBehaviour
     // SFX toggle method
     public void onSFXToggleClicked()
     {
+        if (progressResetPanel != null)
+            progressResetPanel.SetActive(false);
+        if (AboutPanel != null)
+            AboutPanel.SetActive(false);
         // Play button click sound
-        if(AudioManager.Instance != null)
+        if (AudioManager.Instance != null)
         {
             AudioManager.Instance.PlayButtonClick();
         }
@@ -270,19 +263,25 @@ public class StartGame : MonoBehaviour
     }
     
     // Progress button method
+    public GameObject progressResetPanel; // Assign in inspector
+    public GameObject AboutPanel;         // Assign in inspector
+
     public void onProgressClicked()
     {
         // Play button click sound
         if(AudioManager.Instance != null)
-        {
             AudioManager.Instance.PlayButtonClick();
-        }
-        
-        // TODO: Add progress functionality here
+
+        // Hide AboutPanel if visible
+        if (AboutPanel != null)
+            AboutPanel.SetActive(false);
+
+        // Show progressResetPanel
+        if (progressResetPanel != null)
+            progressResetPanel.SetActive(true);
     }
-    
-    // About button method
-    public void onAboutClicked()
+
+    public void onResetyesClicked()
     {
         // Play button click sound
         if(AudioManager.Instance != null)
@@ -290,7 +289,24 @@ public class StartGame : MonoBehaviour
             AudioManager.Instance.PlayButtonClick();
         }
         
-        // TODO: Add about functionality here
+        // Reset all PlayerPrefs
+        PlayerPrefs.DeleteAll();
+        PlayerPrefs.Save();
+
+        // Hide progressResetPanel
+        if (progressResetPanel != null)
+            progressResetPanel.SetActive(false);
+    }
+
+    public void onResetnoClicked()
+    {
+        // Play button click sound
+        if(AudioManager.Instance != null)
+            AudioManager.Instance.PlayButtonClick();
+
+        // Hide progressResetPanel
+        if (progressResetPanel != null)
+            progressResetPanel.SetActive(false);
     }
     
     // Language button method
@@ -298,14 +314,17 @@ public class StartGame : MonoBehaviour
     {
         // Play button click sound
         if(AudioManager.Instance != null)
-        {
             AudioManager.Instance.PlayButtonClick();
-        }
-        
-        // TODO: Add language switching functionality here
-        // Example: Open language selection menu
+
+        // Hide progressResetPanel
+        if (progressResetPanel != null)
+            progressResetPanel.SetActive(false);
+
+        // Show AboutPanel
+        if (AboutPanel != null)
+            AboutPanel.SetActive(true);
     }
-    
+
     // Update button sprites based on current mute states
     private void UpdateMuteButtonSprites()
     {

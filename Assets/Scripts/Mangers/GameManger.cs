@@ -155,7 +155,8 @@ public class GameManger : Managers<GameManger>
 
     public Animator animator;
     private Animator navAnimator; // Will be found at runtime by tag "Nav_UI"
-
+    private const string LevelKey = "CurrentLevelNO";
+    
     public int possibleDistance;
     public GameObject[] levels;
     public float totalDistanceDraw;
@@ -172,8 +173,10 @@ public class GameManger : Managers<GameManger>
 
     private void Awake()
     {
+        // Load selected level to play
+        currentLevelNO = PlayerPrefs.GetInt("SelectedLevelNO", 0);
         if (!isDebuging)
-            LoadLeveL(0);
+            LoadLeveL(currentLevelNO);
     }
 
     private void FindNavUIAnimator()
@@ -238,7 +241,9 @@ public class GameManger : Managers<GameManger>
             AudioManager.Instance.PlayLevelComplete();
         }
         
-        GameResult gameResult = new GameResult(){ score= currentlevelmaneger.getScore(totalDistanceDraw),level=currentLevelNO };
+        Scores score = currentlevelmaneger.getScore(totalDistanceDraw);
+        SaveLevelStars(currentLevelNO, score);
+        GameResult gameResult = new GameResult(){ score= score, level=currentLevelNO };
         TriggerGameEnd();
         TriggerGameEndedOnWin(gameResult);
     }
@@ -358,10 +363,14 @@ public class GameManger : Managers<GameManger>
     }
     bool LoadNextLevel()
     {
-      
         currentLevelNO++;
-     
-
+        // Unlock new level if it's higher than previous unlocked
+        int unlockedLevel = PlayerPrefs.GetInt(LevelKey, 0);
+        if (currentLevelNO > unlockedLevel)
+        {
+            PlayerPrefs.SetInt(LevelKey, currentLevelNO);
+            PlayerPrefs.Save();
+        }
         return LoadLevel(levels[currentLevelNO]);
     }
     void RestartCurrentLevel()
@@ -369,10 +378,10 @@ public class GameManger : Managers<GameManger>
         // Reset win/loss flags when restarting
         isWinInProgress = false;
         isLossInProgress = false;
-        
+
         // Reload the current level
         LoadLevel(levels[currentLevelNO]);
-        
+
         // Reset game state and trigger ready
         TriggerGameOnReady();
     }
@@ -380,6 +389,35 @@ public class GameManger : Managers<GameManger>
     {
         totalDistanceDraw += distance;
         TriggerOnDrawingEnd(totalDistanceDraw);
+    }
+
+    // Optionally, reset progress when going home or starting a new game
+    public void ResetProgress()
+    {
+        currentLevelNO = 0;
+        PlayerPrefs.SetInt(LevelKey, currentLevelNO);
+        PlayerPrefs.Save();
+    }
+
+    void SaveLevelStars(int level, Scores score)
+    {
+        int stars = 0;
+        switch (score)
+        {
+            case Scores.ONESTART: stars = 1; break;
+            case Scores.TWOSTAR: stars = 2; break;
+            case Scores.THREESTAR: stars = 3; break;
+            default: stars = 0; break;
+        }
+        string key = $"Level_{level}_Stars";
+        PlayerPrefs.SetInt(key, stars);
+        PlayerPrefs.Save();
+    }
+
+    int GetLevelStars(int level)
+    {
+        string key = $"Level_{level}_Stars";
+        return PlayerPrefs.GetInt(key, 0);
     }
 }
 
