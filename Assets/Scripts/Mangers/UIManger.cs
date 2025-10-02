@@ -9,7 +9,6 @@ public class UIManger : MonoBehaviour, GameManger.GameLauncher, GameManger.GameE
     public GameObject playUI;
 
     public GameObject winUI;
-    public GameObject retrayUI;
     public Text level,level2;
 
 
@@ -26,25 +25,20 @@ public class UIManger : MonoBehaviour, GameManger.GameLauncher, GameManger.GameE
     {
         winUI.SetActive(true);
         playUI.SetActive(false);
-        retrayUI.SetActive(false);
     }
 
     public void OnLoss()
     {
-        //Debug.Log("OnLoss UIManger");
         winUI.SetActive(false);
         playUI.SetActive(false);
-        //retrayUI.SetActive(true);
     }
 
     public void OnReady()
     {
-        //Debug.Log("OnReady UIManger");
         level.text = "Level " + GameManger.Instance.Currentlevelmaneger.currentlevel;
         level2.text = "Level " + GameManger.Instance.Currentlevelmaneger.currentlevel;
         winUI.SetActive(false);
         playUI.SetActive(true);
-        retrayUI.SetActive(false);
     }
 
     public void OnStart()

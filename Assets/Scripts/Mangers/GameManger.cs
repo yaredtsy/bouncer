@@ -170,11 +170,24 @@ public class GameManger : Managers<GameManger>
     private bool isLossInProgress = false;
 
     public LevelManger Currentlevelmaneger => currentlevelmaneger;
-
+    private bool tutorialActive = false;
     private void Awake()
     {
         // Load selected level to play
         currentLevelNO = PlayerPrefs.GetInt("SelectedLevelNO", 0);
+ 
+        // Show tutorial if level 1 and not shown before
+        if (currentLevelNO == 0 && PlayerPrefs.GetInt(LevelKey, 0) == 0 && Tutorial != null)
+        {
+            Tutorial.SetActive(true);
+            tutorialActive = true;
+        }
+        else if (Tutorial != null)
+        {
+            Tutorial.SetActive(false);
+            tutorialActive = false;
+        }
+
         if (!isDebuging)
             LoadLeveL(currentLevelNO);
     }
@@ -265,6 +278,23 @@ public class GameManger : Managers<GameManger>
         #endif
     }
 
+    public GameObject Tutorial; // Assign in inspector
+
+    
+
+    // Call this when player starts to draw or play (e.g., in OnPlayTap or drawing start event)
+    public void HideTutorialIfActive()
+    {
+        if (tutorialActive && Tutorial != null)
+        {
+            Tutorial.SetActive(false);
+            tutorialActive = false;
+            //PlayerPrefs.SetInt("TutorialShown", 1);
+            PlayerPrefs.Save();
+        }
+    }
+
+    // Example: Call this in OnPlayTap and/or when drawing starts
     public void OnPlayTap()
     {
         // Play button click sound
@@ -272,12 +302,10 @@ public class GameManger : Managers<GameManger>
         {
             AudioManager.Instance.PlayButtonClick();
         }
-        
         if (totalDistanceDraw < 0)
         {
             Debug.Log("Please Draw");
         }
-        // else
         if (totalDistanceDraw == 0)
         {
             Debug.Log("must draw first");

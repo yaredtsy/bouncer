@@ -107,8 +107,7 @@ public class StartGame : MonoBehaviour
         if(animator != null)
             animator.SetTrigger("StartFade");
 
-        // Wait for fade animation to complete (adjust time based on your animation)
-        yield return new WaitForSeconds(fadeDuration); // Now uses configurable duration
+        yield return new WaitForSeconds(fadeDuration);
 
         // Now switch UI elements
         Logo.SetActive(false);
@@ -283,25 +282,35 @@ public class StartGame : MonoBehaviour
 
     public void onResetyesClicked()
     {
-        // Play button click sound
-        if(AudioManager.Instance != null)
+        if (isTransitioning) return;
+        if (AudioManager.Instance != null)
         {
             AudioManager.Instance.PlayButtonClick();
         }
+
+        StartCoroutine(TransitionToStart());
+    }
+
+    private IEnumerator TransitionToStart()
+    {
+        isTransitioning = true;
         
-        // Reset all PlayerPrefs
+        if(animator != null)
+            animator.SetTrigger("StartFade");
+
+        yield return new WaitForSeconds(fadeDuration);
+
         PlayerPrefs.DeleteAll();
         PlayerPrefs.Save();
+        isTransitioning = false;
 
-        // Hide progressResetPanel
-        if (progressResetPanel != null)
-            progressResetPanel.SetActive(false);
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 
     public void onResetnoClicked()
     {
         // Play button click sound
-        if(AudioManager.Instance != null)
+        if (AudioManager.Instance != null)
             AudioManager.Instance.PlayButtonClick();
 
         // Hide progressResetPanel
@@ -322,18 +331,33 @@ public class StartGame : MonoBehaviour
 
         // Show AboutPanel
         if (AboutPanel != null)
+            AboutPanel.SetActive(false);
+    }
+    
+    public void onAboutClicked()
+    {
+        // Play button click sound
+        if(AudioManager.Instance != null)
+            AudioManager.Instance.PlayButtonClick();
+
+        // Hide progressResetPanel
+        if (progressResetPanel != null)
+            progressResetPanel.SetActive(false);
+
+        // Show AboutPanel
+        if (AboutPanel != null)
             AboutPanel.SetActive(true);
     }
 
     // Update button sprites based on current mute states
     private void UpdateMuteButtonSprites()
     {
-        if(AudioManager.Instance != null)
+        if (AudioManager.Instance != null)
         {
             // Update music button sprite
-            if(musicButton != null)
+            if (musicButton != null)
             {
-                if(AudioManager.Instance.isMusicMuted)
+                if (AudioManager.Instance.isMusicMuted)
                 {
                     musicButton.image.sprite = musicMutedSprite;
                 }
@@ -342,11 +366,11 @@ public class StartGame : MonoBehaviour
                     musicButton.image.sprite = musicUnmutedSprite;
                 }
             }
-            
+
             // Update SFX button sprite
-            if(sfxButton != null)
+            if (sfxButton != null)
             {
-                if(AudioManager.Instance.isSFXMuted)
+                if (AudioManager.Instance.isSFXMuted)
                 {
                     sfxButton.image.sprite = sfxMutedSprite;
                 }

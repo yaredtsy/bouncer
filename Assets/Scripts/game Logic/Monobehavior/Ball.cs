@@ -77,7 +77,6 @@ public class Ball : MonoBehaviour, GameManger.GameLauncher,IDestroyer
         // Only play bounce SFX if the ball is moving fast enough
         if (currentSpeed >= minBounceSpeed)
         {
-            Debug.Log("Bounce SFX: "+ currentSpeed);
             // Check if the collision is with a line (has LineRenderer component)
             if (collision.gameObject.GetComponent<LineRenderer>() != null)
             {

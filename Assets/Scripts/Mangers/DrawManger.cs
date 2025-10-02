@@ -67,7 +67,8 @@ public class DrawManger : MonoBehaviour, GameManger.GameLauncher
 
         linerenderer.SetWidth(lineData.start, lineData.end);
         linerenderer.material.color = lineData.color;
-
+        if (GameManger.Instance != null)
+            GameManger.Instance.HideTutorialIfActive();
         if (AudioManager.Instance != null)
             AudioManager.Instance.StartStretchSFX();
     }
@@ -129,7 +130,6 @@ public class DrawManger : MonoBehaviour, GameManger.GameLauncher
     {
         if (lineLength < 0.4 || IsPointerOverUIObject())
         {
-            Debug.Log("Line Destroyed");
 
             if (AudioManager.Instance != null)
                 AudioManager.Instance.StopStretchSFX();
